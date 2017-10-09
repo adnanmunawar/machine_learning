@@ -23,7 +23,7 @@ pass
 
 
 class Params():
-    def init(self):
+    def __init__(self):
         pass
     batch_size = 64
     epoch = 5
