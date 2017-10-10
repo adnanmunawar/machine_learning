@@ -1,3 +1,4 @@
+from docutils.nodes import paragraph
 from keras.models import Sequential
 from keras.utils import np_utils
 from keras.layers import Dense, Dropout
@@ -6,6 +7,7 @@ import keras.activations
 from keras.optimizers import SGD
 from keras.metrics import categorical_accuracy
 import numpy as np
+from sympy.integrals.prde import param_rischDE
 
 
 def accuracy_percentage(y_true, y_pred):
@@ -27,6 +29,8 @@ class Params():
         pass
     batch_size = 64
     epoch = 5
+    # This array is a tuple, the number of neurons of each layers and its activation function
+    layers = np.array([[64, 'sigmoid'], [32, 'tanh'], [10, 'softmax']])
 
 
 def main():
@@ -39,9 +43,12 @@ def main():
     Y_data = np_utils.to_categorical(Y_data, 10)
     Y_test = np_utils.to_categorical(Y_test, 10)
     print X_data.shape[1]
-    model.add(Dense(32, input_dim=X_data.shape[1], activation='sigmoid'))
-    model.add(Dense(16, activation='tanh'))
-    model.add(Dense(10, activation='softmax'))
+    for i in range(param.layers.shape[0]):
+        print 'Layer = ', i+1, ': Adding Layer with Density', param.layers[i, 0], 'and activation ', param.layers[i, 1]
+        if i == 0:
+            model.add(Dense(param.layers[i, 0].astype(int), input_dim=X_data.shape[1], activation=param.layers[i, 1]))
+        model.add(Dense(param.layers[i, 0].astype(int), activation=param.layers[i, 1]))
+
     sgd = SGD(lr=0.01, nesterov=True)
     model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['categorical_accuracy', 'acc'])
     model.fit(X_data, Y_data, batch_size=param.batch_size, epochs=param.epoch, verbose=False)
