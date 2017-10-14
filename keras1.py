@@ -1,13 +1,9 @@
-from docutils.nodes import paragraph
 from keras.models import Sequential
 from keras.utils import np_utils
 from keras.layers import Dense, Dropout
 from keras.datasets import mnist
-import keras.activations
 from keras.optimizers import SGD
-from keras.metrics import categorical_accuracy
 import numpy as np
-from sympy.integrals.prde import param_rischDE
 
 
 def accuracy_percentage(y_true, y_pred):
